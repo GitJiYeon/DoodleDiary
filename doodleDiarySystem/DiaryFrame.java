@@ -15,11 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class DiaryFrame extends JFrame{
-	String choiceDay;
+	String choiceDay; //클릭 날짜
 	JButton dateButton;
 	
-	
-    public DiaryFrame() {
+    public DiaryFrame() { 
     	setTitle("DoodleDiary");
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -84,7 +83,7 @@ public class DiaryFrame extends JFrame{
         	
         	dateButton.addActionListener(e ->{
             	choiceDay = String.valueOf(buttonDate);
-            	System.out.println(choiceDay);
+            	showDrawingFrame(choiceDay);
             });
         	
         	if(dayTempCount % 7 == 4) {
@@ -120,5 +119,8 @@ public class DiaryFrame extends JFrame{
         
         setVisible(true);
     }
-
+    
+    void showDrawingFrame(String choiceDate ) {
+    	new drawingFrame(choiceDate);
+    }
 }
