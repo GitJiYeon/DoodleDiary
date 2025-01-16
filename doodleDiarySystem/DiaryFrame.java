@@ -120,7 +120,7 @@ public class DiaryFrame extends JFrame{
         setVisible(true);
     }
     
-    void showDrawingFrame(String choiceDate) {
-    	new drawingFrame(choiceDate);
+    void showMixFrame(String choiceDate) {
+    	new MixFrame(choiceDate);
     }
 }
