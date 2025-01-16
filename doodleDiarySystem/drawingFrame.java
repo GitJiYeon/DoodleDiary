@@ -1,5 +1,9 @@
 package doodleDiarySystem;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,12 +18,24 @@ public class drawingFrame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         
-        JButton exitButton = new JButton("X");
-        add(exitButton);
+        requestFocusInWindow();
+        Panel drawingPanel = new Panel();
+        Panel toolPanel = new Panel();
+        Panel topPanel = new Panel();
+        
+        JButton exitButton = new JButton("EXIT");
+        topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        topPanel.add(exitButton);
+        exitButton.setBackground(Color.RED);
+        exitButton.setForeground(Color.WHITE);
+        add(topPanel, BorderLayout.NORTH);
+        
+        
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // 현재 창 닫기
+                dispose();
+                drawingPanel.setFocusable(true);
             }
         });
 	}

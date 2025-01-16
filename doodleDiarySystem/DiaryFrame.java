@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 public class DiaryFrame extends JFrame{
 	String choiceDay; //클릭 날짜
 	JButton dateButton;
-	
+	int CurrentChoiceMonth; 
     public DiaryFrame() { 
     	setTitle("DoodleDiary");
         setSize(800, 600);
@@ -86,11 +86,11 @@ public class DiaryFrame extends JFrame{
             	showDrawingFrame(choiceDay);
             });
         	
-        	if(dayTempCount % 7 == 4) {
+        	if(dayTempCount % 7 == 5) {
         		dateButton.setBackground(Color.WHITE);
         		dateButton.setForeground(Color.RED);
         	}
-        	else if(dayTempCount % 7 == 5) {
+        	else if(dayTempCount % 7 == 4) {
         		dateButton.setBackground(Color.WHITE);
         		dateButton.setForeground(Color.BLUE);
         	}
@@ -120,7 +120,7 @@ public class DiaryFrame extends JFrame{
         setVisible(true);
     }
     
-    void showDrawingFrame(String choiceDate ) {
+    void showDrawingFrame(String choiceDate) {
     	new drawingFrame(choiceDate);
     }
 }
