@@ -167,6 +167,6 @@ public class DiaryFrame extends JFrame{
     }
 
     void showMixFrame(String currentYear, String choiceMonth,String choiceDate) {
-    	new drawingFrame(currentYear, choiceMonth, choiceDate);
+    	new MixFrame(currentYear, choiceMonth, choiceDate);
     }
 }

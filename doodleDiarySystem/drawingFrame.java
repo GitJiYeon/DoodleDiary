@@ -21,35 +21,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class drawingFrame extends JFrame {
+public class drawingFrame extends JPanel {
     boolean isUsePen = false;
     boolean isUseEraser = false;
     boolean isUseStemp = false;
     Point lastPoint = null;
 
-    public drawingFrame(String currentYear, String currentMonth, String choiceDate) {
-        setTitle("DoodleDiary");
+    BufferedImage currentImage;
+    
+    public drawingFrame() {
         setSize(700, 500);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         setVisible(true);
 
-        requestFocusInWindow();
-
         JPanel topPanel = new JPanel();
-        JLabel showDate = new JLabel(currentYear + "년 " + currentMonth + "월 " + choiceDate + "일", JLabel.CENTER);
-        showDate.setFont(new Font("나눔 고딕", Font.PLAIN, 20));
-        topPanel.add(showDate);
-        JButton exitButton = new JButton("EXIT");
-        topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
-        JButton saveButton = new JButton("SAVE");
-        topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
-        topPanel.add(saveButton);
-        topPanel.add(exitButton);
-        saveButton.setBackground(Color.DARK_GRAY);
-        saveButton.setForeground(Color.WHITE);
-        exitButton.setBackground(Color.RED);
-        exitButton.setForeground(Color.WHITE);
         add(topPanel, BorderLayout.NORTH);
 
         JPanel toolPanel = new JPanel();
@@ -132,18 +116,15 @@ public class drawingFrame extends JFrame {
 
         add(drawingPanel, BorderLayout.CENTER);
         add(toolPanel, BorderLayout.EAST);
-
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-        
     }
 
+    // getImage 메서드 추가
+    public BufferedImage getImage() {
+        return currentImage;
+    }
+    
     class DrawingPanel extends JPanel {
-        BufferedImage currentImage;
+
         Graphics2D g2d;
         boolean isDrawing = false;
         Color currentColor;
@@ -171,20 +152,29 @@ public class drawingFrame extends JFrame {
             addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
-                    Graphics g = getGraphics();
-                    Graphics2D g2d = (Graphics2D) g;
-                    if (isUsePen) {
-                        g.setColor(currentColor);
-                        g2d.setStroke(new BasicStroke(5)); // 펜 두께
-                    } else if (isUseEraser) {
-                        g.setColor(Color.white);
-                        g2d.setStroke(new BasicStroke(20)); // 지우개 크기 고정 20
-                    }
+                    if (isUsePen || isUseEraser) {
+                        // 마우스 드래그 시 currentImage에 그려지는 내용 업데이트
+                        if (currentImage == null) {
+                            currentImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+                            g2d = currentImage.createGraphics();
+                            g2d.setColor(Color.WHITE); // 초기 배경을 흰색으로 설정
+                            g2d.fillRect(0, 0, getWidth(), getHeight()); // 배경 그리기
+                        }
 
-                    if (lastPoint != null && !isUseStemp) {
-                        g.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY());
+                        if (isUsePen) {
+                            g2d.setColor(currentColor);
+                            g2d.setStroke(new BasicStroke(5)); // 펜 두께 설정
+                        } else if (isUseEraser) {
+                            g2d.setColor(Color.WHITE); // 지우개 색상 설정
+                            g2d.setStroke(new BasicStroke(20)); // 지우개 크기 설정
+                        }
+
+                        if (lastPoint != null) {
+                            g2d.drawLine(lastPoint.x, lastPoint.y, e.getX(), e.getY());
+                        }
+                        lastPoint = e.getPoint(); // 마지막 좌표 갱신
+                        repaint(); // 화면 갱신
                     }
-                    lastPoint = e.getPoint();
                 }
             });
         }
@@ -192,17 +182,25 @@ public class drawingFrame extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
+            // currentImage가 null이면 초기화
             if (currentImage == null) {
                 currentImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
                 g2d = currentImage.createGraphics();
-                g2d.setColor(currentColor);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.dispose();
+                g2d.setColor(Color.WHITE); // 배경을 흰색으로 설정
+                g2d.fillRect(0, 0, getWidth(), getHeight()); // 배경 그리기
             }
+
+            // currentImage를 화면에 그립니다.
             g.drawImage(currentImage, 0, 0, this);
         }
 
+        public BufferedImage getImage() {
+            return currentImage; // 현재 그려진 이미지를 반환
+        }
+
         public void DelDrawing() {
+            currentImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB); // 초기화
             repaint();
         }
 
